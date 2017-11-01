@@ -1,0 +1,6 @@
+19:46:28 **** Incremental Build of configuration Debug for project firstsection ****
+gcc -g -o /home/girija/Documents/networks/labs/lab1section1/firstsection/src/server /home/girija/Documents/networks/labs/lab1section1/firstsection/src/server.c all 
+gcc: error: all: No such file or directory
+
+19:46:29 Build Finished (took 655ms)
+
