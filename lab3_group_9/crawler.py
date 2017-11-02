@@ -25,6 +25,8 @@ import urlparse
 from BeautifulSoup import *
 from collections import defaultdict
 import re
+import redis
+server = redis.Redis('127.0.0.1')
 
 def attr(elem, attr):
     """An html attribute from an html element. E.g. <a href="">, then
@@ -162,7 +164,7 @@ class crawler(object):
     def add_link(self, from_doc_id, to_doc_id):
         """Add a link into the database, or increase the number of links between
         two pages in the database."""
-        # TODO
+        #TO EDIT FOR LAB 3
 
     def _visit_title(self, elem):
         """Called when visiting the <title> tag."""
@@ -232,8 +234,10 @@ class crawler(object):
         """A function that inserts a url into a document db table
         increments the doc id
         and then returns that newly inserted document's id."""
-	self._doc_str_cache[self._next_doc_id] = url 
-        ret_id = self._next_doc_id
+	self._doc_str_cache[self._next_doc_id] = url
+	ret_id = self._next_doc_id
+	doc_id_key = "doc_index: " + str(ret_id)
+        server.set(doc_id_key, url)
         self._next_doc_id += 1
         return ret_id
     
@@ -243,6 +247,9 @@ class crawler(object):
         and then returns that newly inserted word's id."""
 	self._word_str_cache[self._next_word_id] = word 
         ret_id = self._next_word_id
+        #REDIS call to add word into lexicon 
+        word_key = "lexicon: " + word
+        server.set(word_key, ret_id)
         self._next_word_id += 1
         return ret_id  
     
@@ -264,14 +271,19 @@ class crawler(object):
             self._mapping_word_str_to_doc_str[word] = set()     
             #convert doc id to urls, and throw them onto the stack
             for doc_id in mapping[word_id]:
-		url = self._doc_str_cache[doc_id]
-		tmp_list.append(url)
+		        #REDIS call to add word_id into inverted index
+		        word_id_key = "inverted_index: " + str(word_id)
+		        server.sadd(word_id_key, doc_id)      
+		        url = self._doc_str_cache[doc_id]
+		        tmp_list.append(url)
             #iterate through stack to add back onto new set    
             length = len(tmp_list)
             i = 0
             while i < length:
             #for list_url in test_list:
-                self._mapping_word_str_to_doc_str[word].add(tmp_list.pop())
+                reversed_url = tmp_list.pop();
+                self._mapping_word_str_to_doc_str[word].add(reversed_url)
+                #REDIS call to add to inverted index ordered set (resolved)
                 i += 1
     	
     def get_resolved_inverted_index(self):
@@ -285,6 +297,11 @@ class crawler(object):
         id_set.add(self._curr_doc_id)
     
     """ -- methods added for lab 1 end -- """
+    """ -- methods added for lab 3 start -- """
+    def page_rank(self):
+        pass
+
+    """ -- methods added for lab 3 end -- """
  
     def _text_of(self, elem):
         """Get the text inside some element without any tags."""
@@ -387,15 +404,17 @@ class crawler(object):
 if __name__ == "__main__":
     bot = crawler(None, "urls.txt")
     bot.crawl(depth=1)
-    word = raw_input("search for an existing word or : ")  
-    while word != "exit":          
-        print "word is " + word
-        word_id = bot.word_id(word)
-        print "word_id is " + str(word_id)  
-        inverted = bot.get_inverted_index()
-	bot.resolve_index()        
-        inverted_resolved = bot.get_resolved_inverted_index()
-        print inverted[word_id]
-        print inverted_resolved[word]
-	word = raw_input("search for an existing word or : ")  
+    bot.resolve_index()
+    bot.page_rank()
+    #word = raw_input("search for an existing word or : ")  
+    #while word != "exit":          
+    #    print "word is " + word
+    #    word_id = bot.word_id(word)
+    #    print "word_id is " + str(word_id)  
+    #    inverted = bot.get_inverted_index()
+	#bot.resolve_index()        
+    #    inverted_resolved = bot.get_resolved_inverted_index()
+    #    print inverted[word_id]
+    #    print inverted_resolved[word]
+	#word = raw_input("search for an existing word or : ") 
 
