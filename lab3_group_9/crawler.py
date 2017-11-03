@@ -25,8 +25,10 @@ import urlparse
 from BeautifulSoup import *
 from collections import defaultdict
 import re
-import redis
-server = redis.Redis('127.0.0.1')
+from collections import defaultdict
+import numpy as np
+#import redis
+#server = redis.Redis('127.0.0.1')
 
 def attr(elem, attr):
     """An html attribute from an html element. E.g. <a href="">, then
@@ -63,11 +65,13 @@ class crawler(object):
 	#need 2-D dictionary, which uses wordID as key and set of docID as value
         self._mapping_word_id_to_doc_id = { }
         #need 2-D dictionary, which uses word as key and set of url as value
-        self._mapping_word_str_to_doc_str = { }
-	#test 
+        self._mapping_word_str_to_doc_str = { } 
   	""" -- Objects added for Lab 1 end -- """
-
-
+        
+        """ -- Objects added for lab 3 start -- """
+        # new list to hold list of links (from, to)
+        self.links = []
+        """ -- Objects added for lab 3 end -- """
 
         # functions to call when entering and exiting specific tags
         self._enter = defaultdict(lambda *a, **ka: self._visit_ignore)
@@ -165,6 +169,8 @@ class crawler(object):
         """Add a link into the database, or increase the number of links between
         two pages in the database."""
         #TO EDIT FOR LAB 3
+        new_link = (from_doc_id, to_doc_id)
+        self.links.append(new_link)
 
     def _visit_title(self, elem):
         """Called when visiting the <title> tag."""
@@ -237,7 +243,7 @@ class crawler(object):
 	self._doc_str_cache[self._next_doc_id] = url
 	ret_id = self._next_doc_id
 	doc_id_key = "doc_index: " + str(ret_id)
-        server.set(doc_id_key, url)
+        #server.set(doc_id_key, url)
         self._next_doc_id += 1
         return ret_id
     
@@ -249,7 +255,7 @@ class crawler(object):
         ret_id = self._next_word_id
         #REDIS call to add word into lexicon 
         word_key = "lexicon: " + word
-        server.set(word_key, ret_id)
+        #server.set(word_key, ret_id)
         self._next_word_id += 1
         return ret_id  
     
@@ -273,7 +279,7 @@ class crawler(object):
             for doc_id in mapping[word_id]:
 		        #REDIS call to add word_id into inverted index
 		        word_id_key = "inverted_index: " + str(word_id)
-		        server.sadd(word_id_key, doc_id)      
+		        #server.sadd(word_id_key, doc_id)      
 		        url = self._doc_str_cache[doc_id]
 		        tmp_list.append(url)
             #iterate through stack to add back onto new set    
@@ -283,7 +289,6 @@ class crawler(object):
             #for list_url in test_list:
                 reversed_url = tmp_list.pop();
                 self._mapping_word_str_to_doc_str[word].add(reversed_url)
-                #REDIS call to add to inverted index ordered set (resolved)
                 i += 1
     	
     def get_resolved_inverted_index(self):
@@ -297,9 +302,48 @@ class crawler(object):
         id_set.add(self._curr_doc_id)
     
     """ -- methods added for lab 1 end -- """
+
     """ -- methods added for lab 3 start -- """
-    def page_rank(self):
-        pass
+
+    def page_rank(self, num_iterations=20, initial_page_rank = 1.0):
+        page_rank = defaultdict(lambda: float(initial_page_rank))
+        num_outgoing_links = defaultdict(float)
+        incoming_links_sets = defaultdict(set)
+        incoming_links = defaultdict(lambda: np.array([]))
+        damping_factor = 0.85
+        
+        # for each link pair: 
+        # incr outgoing links dictionary for from_id
+        # add to incoming link set for to_id
+        for from_id, to_id in self.links:
+            num_outgoing_links[from_id] += 1.0
+            incoming_links_sets[to_id].add(from_id)
+        
+        # turn into array for easier processing later
+        # use every to_id as key to hold entire array of incoming ids
+        for to_id in incoming_links_sets:
+            incoming_links[to_id] = np.array([from_id for from_id in incoming_links_sets[to_id]])
+                    
+        # find how many documents are leaving the page (from_id)
+        # then create equation in from_id
+        num_documents = float(len(num_outgoing_links))
+        lead = (1.0 - damping_factor) / num_documents
+        partial_page_rank = np.vectorize(lambda from_id: page_rank[from_id] / num_outgoing_links[from_id])
+
+        for num in xrange(num_iterations):
+            for from_id in num_outgoing_links:
+                end = 0.0
+                if len(incoming_links[from_id]):
+                    end = damping_factor * partial_page_rank(incoming_links[from_id]).sum()
+                    page_rank[from_id] = lead + end
+                        
+        return page_rank
+
+    def print_links(self):
+        for i,v  in self.links:
+            print i,v
+
+
 
     """ -- methods added for lab 3 end -- """
  
@@ -405,7 +449,12 @@ if __name__ == "__main__":
     bot = crawler(None, "urls.txt")
     bot.crawl(depth=1)
     bot.resolve_index()
-    bot.page_rank()
+    #bot.print_links()
+    #links = [(1,2), (1,3), (3,4), (1,4), (2,3), (4,3)]
+    ranks = bot.page_rank()
+    for doc_id in ranks:
+        print "doc_id : " + str(doc_id)
+        print "rank is :" + str(ranks[doc_id])
     #word = raw_input("search for an existing word or : ")  
     #while word != "exit":          
     #    print "word is " + word
