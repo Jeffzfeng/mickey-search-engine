@@ -27,8 +27,8 @@ from collections import defaultdict
 import re
 from collections import defaultdict
 import numpy as np
-#import redis
-#server = redis.Redis('127.0.0.1')
+import redis
+server = redis.Redis('52.14.224.74')
 
 def attr(elem, attr):
     """An html attribute from an html element. E.g. <a href="">, then
@@ -71,6 +71,10 @@ class crawler(object):
         """ -- Objects added for lab 3 start -- """
         # new list to hold list of links (from, to)
         self.links = []
+        
+        #new list to hold list of word_id to url with page rank
+        self.word_id_to_url_list = { }
+        
         """ -- Objects added for lab 3 end -- """
 
         # functions to call when entering and exiting specific tags
@@ -343,7 +347,22 @@ class crawler(object):
         for i,v  in self.links:
             print i,v
 
-
+    def ranked_inverted_index(self):
+        for word in self._word_id_cache:
+            word_id = self._word_id_cache[word]
+            doc_id_sets = self.get_inverted_index()
+            tmp_list = []
+            page_rank_dicts = self.page_rank()
+            for doc_id in doc_id_sets[word_id]:
+                pr = page_rank_dicts[doc_id]
+                new_rank_pair = doc_id, pr
+                tmp_list.append(new_rank_pair)
+            tmp_list.sort(reverse = True, key = lambda rank_pair: rank_pair[1])
+            while(len(tmp_list)>0):
+                doc_id, pr =  tmp_list.pop(0)
+                url = self._doc_str_cache[doc_id]
+                server.rpush(word, url)
+            self.word_id_to_url_list[word] = tmp_list    
 
     """ -- methods added for lab 3 end -- """
  
@@ -449,12 +468,14 @@ if __name__ == "__main__":
     bot = crawler(None, "urls.txt")
     bot.crawl(depth=1)
     bot.resolve_index()
+    bot.ranked_inverted_index()
+    print bot.word_id_to_url_list['toronto']
     #bot.print_links()
     #links = [(1,2), (1,3), (3,4), (1,4), (2,3), (4,3)]
-    ranks = bot.page_rank()
-    for doc_id in ranks:
-        print "doc_id : " + str(doc_id)
-        print "rank is :" + str(ranks[doc_id])
+    #ranks = bot.page_rank()
+    #for doc_id in ranks:
+    #    print "doc_id : " + str(doc_id)
+    #    print "rank is :" + str(ranks[doc_id])
     #word = raw_input("search for an existing word or : ")  
     #while word != "exit":          
     #    print "word is " + word
