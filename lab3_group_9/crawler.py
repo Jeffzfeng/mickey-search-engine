@@ -22,6 +22,7 @@ import urllib2
 import urlparse
 #from bs4 import BeautifulSoup
 #from bs4 import Tag
+import unicodedata
 from BeautifulSoup import *
 from collections import defaultdict
 import re
@@ -57,16 +58,16 @@ class crawler(object):
         #dictionary which uses word as key and word id as  return value
         self._word_id_cache = { }
 
-	""" -- Objects added for Lab 1 start -- """
-	#dictionary which uses doc id as key and returns url as value
-	self._doc_str_cache = { }
-	#dictionary which uses word id as key and returns word as value
-	self._word_str_cache = { }
-	#need 2-D dictionary, which uses wordID as key and set of docID as value
+    	""" -- Objects added for Lab 1 start -- """
+    	#dictionary which uses doc id as key and returns url as value
+    	self._doc_str_cache = { }
+    	#dictionary which uses word id as key and returns word as value
+    	self._word_str_cache = { }
+    	#need 2-D dictionary, which uses wordID as key and set of docID as value
         self._mapping_word_id_to_doc_id = { }
         #need 2-D dictionary, which uses word as key and set of url as value
         self._mapping_word_str_to_doc_str = { } 
-  	""" -- Objects added for Lab 1 end -- """
+      	""" -- Objects added for Lab 1 end -- """
         
         """ -- Objects added for lab 3 start -- """
         # new list to hold list of links (from, to)
@@ -76,6 +77,16 @@ class crawler(object):
         self.word_id_to_url_list = { }
         
         """ -- Objects added for lab 3 end -- """
+        
+        """ -- Objects added for lab 4 start -- """
+
+        self.title_dict = { }
+        
+        self.h1_dict = { }
+
+        self.h2_dict = { }
+
+        """ -- Objects added for lab 4 end -- """
 
         # functions to call when entering and exiting specific tags
         self._enter = defaultdict(lambda *a, **ka: self._visit_ignore)
@@ -89,6 +100,10 @@ class crawler(object):
         def visit_title(*args, **kargs):
             self._visit_title(*args, **kargs)
             self._increase_font_factor(7)(*args, **kargs)
+            
+        def visit_description(*args, **kargs):
+            self._visit_description(*args, **kargs)
+        
 
         # increase the font size when we enter these tags
         self._enter['b'] = self._increase_font_factor(2)
@@ -101,6 +116,7 @@ class crawler(object):
         self._enter['h4'] = self._increase_font_factor(4)
         self._enter['h5'] = self._increase_font_factor(3)
         self._enter['title'] = visit_title
+        self._enter['meta'] = visit_description
 
         # decrease the font size when we exit these tags
         self._exit['b'] = self._increase_font_factor(-2)
@@ -116,7 +132,7 @@ class crawler(object):
 
         # never go in and parse these tags
         self._ignored_tags = set([
-            'meta', 'script', 'link', 'meta', 'embed', 'iframe', 'frame', 
+            'script', 'link', 'embed', 'iframe', 'frame', 
             'noscript', 'object', 'svg', 'canvas', 'applet', 'frameset', 
             'textarea', 'style', 'area', 'map', 'base', 'basefont', 'param',
         ])
@@ -179,10 +195,22 @@ class crawler(object):
     def _visit_title(self, elem):
         """Called when visiting the <title> tag."""
         title_text = self._text_of(elem).strip()
+        title_string = unicodedata.normalize('NFKD', title_text).encode('ascii','ignore')
+        current_doc_id = self._next_doc_id - 1
+        self.title_dict[current_doc_id] = title_string
         print "document title="+ repr(title_text)
 
-        # TODO update document title for document id self._curr_doc_id
-    
+
+    def _visit_description(self, elem):
+        #description_text = self._text_of(elem).strip()
+        elem_string = str(elem)
+        if "description" in elem_string:
+            if "content" in elem_string:
+                new_elem_string = re.search('(?<=content=").*', elem_string)
+                new_elem_string = re.sub('".*', "", new_elem_string.group(0))
+                print new_elem_string
+                print len(new_elem_string)
+
     def _visit_a(self, elem):
         """Called when visiting <a> tags."""
 
@@ -469,7 +497,7 @@ if __name__ == "__main__":
     bot.crawl(depth=1)
     bot.resolve_index()
     bot.ranked_inverted_index()
-    print bot.word_id_to_url_list['toronto']
+    print bot.title_dict
     #bot.print_links()
     #links = [(1,2), (1,3), (3,4), (1,4), (2,3), (4,3)]
     #ranks = bot.page_rank()

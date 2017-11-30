@@ -1,0 +1,29 @@
+document title=u'Pythex: a Python regular expression editor'
+Pythex is a real-time regular expression
+40
+    num words=228
+    url='https://pythex.org/'
+HTTP Error 403: Forbidden
+    num words=0
+    url=u'http://flask.pocoo.org/'
+document title=u'Gabriel Rodr\xedguez Alberich'
+A software engineer from Spain
+30
+    num words=107
+    url=u'http://gabi.is'
+document title=u'7.2. re \u2014 Regular expression operations &#8212; Python 2.7.14 documentation'
+    num words=6634
+    url=u'https://docs.python.org/2/library/re.html'
+document title=u'Rubular: a Ruby regular expression editor and tester'
+Rubular is a Ruby-based regular expression editor and tester. It's a handy way to test regular expressions as you write them. Rubular is an especially good fit for Ruby and Rails developers, since it uses Ruby on the server to evaluate regexes, but should also be useful for those working in other programming languages and frameworks (Java, PHP, Python, Javascript, etc.)
+372
+    num words=224
+    url=u'http://rubular.com'
+document title=u'GitHub - tartley/python-regex-cheatsheet: Python 2.7 Regular Expression cheatsheet, as a restructured text document and Makefile to convert it to PDF'
+python-regex-cheatsheet - Python 2.7 Regular Expression cheatsheet, as a restructured text document and Makefile to convert it to PDF
+133
+python-regex-cheatsheet - Python 2.7 Regular Expression cheatsheet, as a restructured text document and Makefile to convert it to PDF
+133
+    num words=287
+    url=u'https://github.com/tartley/python-regex-cheatsheet/'
+{1: 'Pythex: a Python regular expression editor', 98: 'Rubular: a Ruby regular expression editor and tester', 15: '7.2. re  Regular expression operations &#8212; Python 2.7.14 documentation', 105: 'GitHub - tartley/python-regex-cheatsheet: Python 2.7 Regular Expression cheatsheet, as a restructured text document and Makefile to convert it to PDF', 7: 'Gabriel Rodriguez Alberich'}
