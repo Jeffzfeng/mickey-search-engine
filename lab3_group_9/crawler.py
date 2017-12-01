@@ -82,9 +82,9 @@ class crawler(object):
 
         self.title_dict = { }
         
-        self.h1_dict = { }
+        self.description_dict = { }
 
-        self.h2_dict = { }
+        self.p_dict = { }
 
         """ -- Objects added for lab 4 end -- """
 
@@ -103,6 +103,11 @@ class crawler(object):
             
         def visit_description(*args, **kargs):
             self._visit_description(*args, **kargs)
+            self._increase_font_factor(5)(*args, **kargs)
+            
+        def visit_paragraph(*args, **kargs):
+            self._visit_paragraph(*args, **kargs)
+            self._increase_font_factor(1)(*args, **kargs)
         
 
         # increase the font size when we enter these tags
@@ -117,6 +122,7 @@ class crawler(object):
         self._enter['h5'] = self._increase_font_factor(3)
         self._enter['title'] = visit_title
         self._enter['meta'] = visit_description
+        self._enter['p'] = visit_paragraph
 
         # decrease the font size when we exit these tags
         self._exit['b'] = self._increase_font_factor(-2)
@@ -129,6 +135,9 @@ class crawler(object):
         self._exit['h4'] = self._increase_font_factor(-4)
         self._exit['h5'] = self._increase_font_factor(-3)
         self._exit['title'] = self._increase_font_factor(-7)
+        self._exit['meta'] = self._increase_font_factor(-5)
+        self._exit['p'] = self._increase_font_factor(-1)
+        
 
         # never go in and parse these tags
         self._ignored_tags = set([
@@ -141,7 +150,7 @@ class crawler(object):
         self._ignored_words = set([
             '', 'the', 'of', 'at', 'on', 'in', 'is', 'it',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+            'k', 'l', 'm', 'n', 'o', 'q', 'r', 's', 't',
             'u', 'v', 'w', 'x', 'y', 'z', 'and', 'or',
         ])
 
@@ -195,25 +204,38 @@ class crawler(object):
     def _visit_title(self, elem):
         """Called when visiting the <title> tag."""
         title_text = self._text_of(elem).strip()
-        title_string = unicodedata.normalize('NFKD', title_text).encode('ascii','ignore')
+        title_string = unicodedata.normalize('NFKD', title_text).encode('ascii', 'ignore')
         current_doc_id = self._next_doc_id - 1
         self.title_dict[current_doc_id] = title_string
         print "document title="+ repr(title_text)
 
-
     def _visit_description(self, elem):
-        #description_text = self._text_of(elem).strip()
+        current_doc_id = self._next_doc_id -1
         elem_string = str(elem)
-        if "description" in elem_string:
-            if "content" in elem_string:
-                new_elem_string = re.search('(?<=content=").*', elem_string)
-                new_elem_string = re.sub('".*', "", new_elem_string.group(0))
-                print new_elem_string
-                print len(new_elem_string)
+        if "content" in elem_string and "description" in elem_string and current_doc_id not in self.description_dict:
+            elem_string = re.search('(?<=content=").*', elem_string)
+            elem_string = re.sub('".*', "", elem_string.group(0))
+            if len(elem_string) > 150:
+                cat_elem_string = elem_string[:150]
+                cat_elem_string = cat_elem_string + '...'
+                self.description_dict[current_doc_id] = cat_elem_string
+            else:
+                self.description_dict[current_doc_id] = elem_string
+                
+    def _visit_paragraph(self, elem):
+        p_text = self._text_of(elem).strip()
+        current_doc_id = self._next_doc_id - 1
+        if (current_doc_id not in self.description_dict):
+            p_string = unicodedata.normalize('NFKD', p_text).encode('ascii', 'ignore')
+            if len(p_string) > 150:
+                cat_p_string = p_string[:150]
+                cat_p_string = cat_p_string + '...'
+                self.description_dict[current_doc_id] = cat_p_string 
+            else:
+                self.description_dict[current_doc_id] = p_string
 
     def _visit_a(self, elem):
         """Called when visiting <a> tags."""
-
         dest_url = self._fix_url(self._curr_url, attr(elem,"href"))
 
         #print "href="+repr(dest_url), \
@@ -498,6 +520,7 @@ if __name__ == "__main__":
     bot.resolve_index()
     bot.ranked_inverted_index()
     print bot.title_dict
+    print bot.description_dict
     #bot.print_links()
     #links = [(1,2), (1,3), (3,4), (1,4), (2,3), (4,3)]
     #ranks = bot.page_rank()

@@ -1,29 +1,46 @@
-document title=u'Pythex: a Python regular expression editor'
-Pythex is a real-time regular expression
-40
-    num words=228
-    url='https://pythex.org/'
-HTTP Error 403: Forbidden
-    num words=0
-    url=u'http://flask.pocoo.org/'
-document title=u'Gabriel Rodr\xedguez Alberich'
-A software engineer from Spain
-30
-    num words=107
-    url=u'http://gabi.is'
-document title=u'7.2. re \u2014 Regular expression operations &#8212; Python 2.7.14 documentation'
-    num words=6634
-    url=u'https://docs.python.org/2/library/re.html'
-document title=u'Rubular: a Ruby regular expression editor and tester'
-Rubular is a Ruby-based regular expression editor and tester. It's a handy way to test regular expressions as you write them. Rubular is an especially good fit for Ruby and Rails developers, since it uses Ruby on the server to evaluate regexes, but should also be useful for those working in other programming languages and frameworks (Java, PHP, Python, Javascript, etc.)
-372
-    num words=224
-    url=u'http://rubular.com'
-document title=u'GitHub - tartley/python-regex-cheatsheet: Python 2.7 Regular Expression cheatsheet, as a restructured text document and Makefile to convert it to PDF'
-python-regex-cheatsheet - Python 2.7 Regular Expression cheatsheet, as a restructured text document and Makefile to convert it to PDF
-133
-python-regex-cheatsheet - Python 2.7 Regular Expression cheatsheet, as a restructured text document and Makefile to convert it to PDF
-133
-    num words=287
-    url=u'https://github.com/tartley/python-regex-cheatsheet/'
-{1: 'Pythex: a Python regular expression editor', 98: 'Rubular: a Ruby regular expression editor and tester', 15: '7.2. re  Regular expression operations &#8212; Python 2.7.14 documentation', 105: 'GitHub - tartley/python-regex-cheatsheet: Python 2.7 Regular Expression cheatsheet, as a restructured text document and Makefile to convert it to PDF', 7: 'Gabriel Rodriguez Alberich'}
+document title=u'Computer Engineering Research Group'
+    num words=215
+    url='http://www.eecg.toronto.edu/'
+HTTP Error 404: Not Found
+HTTP Error 400: Bad Request
+HTTP Error 404: Not Found
+document title=u'EECG Student Guide'
+    num words=658
+    url=u'http://www.eecg.toronto.edu/~exec/student_guide/Main/index.shtml'
+HTTP Error 404: Not Found
+document title=u'Computer Group Online Thesis Library'
+    num words=130
+    url=u'http://www.eecg.toronto.edu/~exec/thesis_lib/'
+document title=u'Computer Engineering Research Group'
+    num words=110
+    url=u'http://www.eecg.toronto.edu/tech_reports/index.html'
+document title=u'Computer Engineering Group Major Research Areas and Projects'
+    num words=185
+    url=u'http://www.eecg.toronto.edu/projects.html'
+document title=u'Computer Engineering Group Research Facilities'
+    num words=629
+    url=u'http://www.eecg.toronto.edu/facilities.html'
+document title=u'Computer Engineering Group Graduate Students'
+    num words=373
+    url=u'http://www.eecg.toronto.edu/grads.html'
+document title=u'Computer Engineering Group Faculty'
+    num words=303
+    url=u'http://www.eecg.toronto.edu/faculty.html'
+HTTP Error 404: Not Found
+<urlopen error [Errno 1] _ssl.c:510: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure>
+document title=u'Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering'
+must be unicode, not str
+document title=u'10 King&#x27;s College Rd - Toronto ON - MapQuest'
+    num words=168
+    url=u'http://www.mapquest.com/maps/map.adp?countryid=41&addtohistory=&country=CA&address=10+King%27s+College+Road&city=Toronto&state=ON&zipcode=M5S+3G4&submit=Get+Map'
+document title=u'10 King&#x27;s College Rd - Toronto ON - MapQuest'
+    num words=168
+    url=u'http://www.mapquest.com/maps?address=10+King%27s+College+Road&city=Toronto&state=ON&zipcode=M5S+3G4&country=CA'
+HTTP Error 302: The HTTP server returned a redirect error that would lead to an infinite loop.
+The last 30x error message was:
+Found
+document title=u'Computer Engineering Research Group'
+    num words=215
+    url=u'http://www.eecg.toronto.edu/Welcome.html'
+{96: 'Computer Engineering Group Research Facilities', 1: 'Computer Engineering Research Group', 98: 'Computer Engineering Group Graduate Students', 353: '10 King&#x27;s College Rd - Toronto ON - MapQuest', 44: 'Computer Group Online Thesis Library', 354: 'Computer Engineering Research Group', 271: 'Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering', 19: 'EECG Student Guide', 53: 'Computer Engineering Research Group', 62: 'Computer Engineering Group Major Research Areas and Projects', 245: 'Computer Engineering Group Faculty'}
+{96: 'There is easy access to computer terminals and workstations.\nThe Computer Engineering Group runs its own cluster of machines that is\ncentered around a...', 353: "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...", 98: 'All machines are connected to the University of Toronto\ncampus network. The campus network consists of 100 Mbit/s fibre-optic cables,\nand ethernet. Ma...', 100: '', 7: 'The department is divided for the purposes of graduate-level research activity\ninto eight  groups. The\nComputer Engineering Group was established arou...', 44: 'The EECG Student Guide', 354: "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...", 271: 'The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...', 349: 'ECE alumnus, founder and investor shares his concern that Canadian prosperity and innovation are on a downward trajectory  and his advice on how entre...', 275: 'Electrical &amp; Computer Engineering', 350: 'U of T Engineering system takes inspiration from plants to convert electrical energy to chemical energy at 64 per cent efficiency, the highest yet rep...', 126: '', 342: 'ECE is proud to announce the speaker line up for our  2017-2018 Distinguished Lectures Series .', 343: '&nbsp;', 344: '&nbsp;', 345: '&nbsp;', 346: '&nbsp;', 347: 'The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...', 348: 'New collaborative research project aims to replace networking infrastructure with flexible software solutions', 93: 'Matured Projects', 62: 'Human Computer Interaction \n \n Wearable Computing ( Mann )\n Computer Vision ( MacLean )\n Biomedical Cybernetics ( Wong )\n Multi-Sensor Information Sys...'}
