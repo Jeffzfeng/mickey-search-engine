@@ -226,7 +226,7 @@ def initial_page():
 
 def error404(error):
 	return pageTemplate + '''This page or file does not exist. <br><br> 
-				Please visit the <a href="http://localhost:8080/">
+				Please visit the <a href="http://ec2-172-31-24-86.us-east-2.compute.amazonaws.com:80/">
 				Search page</a> for a new search.'''
 
 @route('/&keywords=<keywords>&page_no=<pageNum>', method='GET')
@@ -319,7 +319,7 @@ def results_per_page(keywords, pageNum):
 	pageList = "Page: "
 
 	for page in range(numPages):
-		pageList += '<a href= "http://localhost:8080/&keywords=' + keywords + '&page_no=' + str(page+1) + '"<a>' + str(page+1) + ' '
+		pageList += '<a href= "http://172-31-24-86:80/&keywords=' + keywords + '&page_no=' + str(page+1) + '"<a>' + str(page+1) + ' '
 
 	pageList += "</tr>"
 
@@ -375,4 +375,4 @@ def results_table():
 
 	
 
-run(host="localhost", port="8080", debug=True)
+run(host="0.0.0.0", port="80", debug=True)

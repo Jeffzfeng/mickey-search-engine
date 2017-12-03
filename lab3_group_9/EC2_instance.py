@@ -25,11 +25,13 @@ new_group.authorize('tcp', 22, 22, '0.0.0.0/0')
 # for ICMP
 new_group.authorize('icmp', -1, -1, '0.0.0.0/0')
 
+reservation = conn.get_all_reservations() 
 #kick off instance into reservation queue
-reservation = conn.run_instances('ami-c5062ba0', key_name='new_key_redis', instance_type='t1.micro', security_groups=['csc326-group9'])
+reservation = conn.run_instances('ami-747d5411', key_name='new_key_redis', instance_type='t1.micro', security_groups=['csc326-group9'])
 
 #take first instance (the newly created one)
 instances = reservation[0].instances
+conn.terminate_instances(instance_ids=[instances[0]])
 
 inst_object = instances[0]
     
@@ -37,3 +39,4 @@ inst_object = instances[0]
 print str(inst_object.state) + "now running" 
 print "at ip address" + str(inst_object.ip_address)
 
+conn.terminate_instances(instance_ids=[instances[0]])

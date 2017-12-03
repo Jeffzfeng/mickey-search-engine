@@ -46,50 +46,27 @@ document title=u'Computer Engineering Research Group'
 {1: 'Computer Engineering Research Group', 2: 'Computer Engineering Research Group', 4: 'Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering', 6: '10 King&#x27;s College Rd - Toronto ON - MapQuest', 7: '10 King&#x27;s College Rd - Toronto ON - MapQuest', 9: 'Computer Engineering Group Faculty', 10: 'Computer Engineering Group Graduate Students', 11: 'Computer Engineering Group Research Facilities', 12: 'Computer Engineering Group Major Research Areas and Projects', 13: 'Computer Engineering Research Group', 14: 'Computer Group Online Thesis Library', 16: 'EECG Student Guide'}
 {1: 'The department is divided for the purposes of graduate-level research activity\ninto eight  groups. The\nComputer Engineering Group was established arou...', 2: 'The department is divided for the purposes of graduate-level research activity\ninto eight  groups. The\nComputer Engineering Group was established arou...', 4: 'The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...', 6: "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...", 7: "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...", 10: '', 11: 'There is easy access to computer terminals and workstations.\nThe Computer Engineering Group runs its own cluster of machines that is\ncentered around a...', 12: 'Human Computer Interaction \n \n Wearable Computing ( Mann )\n Computer Vision ( MacLean )\n Biomedical Cybernetics ( Wong )\n Multi-Sensor Information Sys...', 16: 'The EECG Student Guide'}
 1
-Computer Engineering Research Group
-The department is divided for the purposes of graduate-level research activity
-into eight  groups. The
-Computer Engineering Group was established arou...
+['Computer Engineering Research Group', 'The department is divided for the purposes of graduate-level research activity\ninto eight  groups. The\nComputer Engineering Group was established arou...']
 2
-Computer Engineering Research Group
-The department is divided for the purposes of graduate-level research activity
-into eight  groups. The
-Computer Engineering Group was established arou...
+['Computer Engineering Research Group', 'The department is divided for the purposes of graduate-level research activity\ninto eight  groups. The\nComputer Engineering Group was established arou...']
 4
-Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering
-The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...
+['Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering', 'The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...']
 6
-10 King&#x27;s College Rd - Toronto ON - MapQuest
-View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...
+['10 King&#x27;s College Rd - Toronto ON - MapQuest', "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a..."]
 7
-10 King&#x27;s College Rd - Toronto ON - MapQuest
-View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...
+['10 King&#x27;s College Rd - Toronto ON - MapQuest', "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a..."]
 9
-Computer Engineering Group Faculty
-Computer Engineering Group Faculty
+['Computer Engineering Group Faculty']
 10
-Computer Engineering Group Graduate Students
-
+['Computer Engineering Group Graduate Students', '']
 11
-Computer Engineering Group Research Facilities
-There is easy access to computer terminals and workstations.
-The Computer Engineering Group runs its own cluster of machines that is
-centered around a...
+['Computer Engineering Group Research Facilities', 'There is easy access to computer terminals and workstations.\nThe Computer Engineering Group runs its own cluster of machines that is\ncentered around a...']
 12
-Computer Engineering Group Major Research Areas and Projects
-Human Computer Interaction 
- 
- Wearable Computing ( Mann )
- Computer Vision ( MacLean )
- Biomedical Cybernetics ( Wong )
- Multi-Sensor Information Sys...
+['Computer Engineering Group Major Research Areas and Projects', 'Human Computer Interaction \n \n Wearable Computing ( Mann )\n Computer Vision ( MacLean )\n Biomedical Cybernetics ( Wong )\n Multi-Sensor Information Sys...']
 13
-Computer Engineering Research Group
-Computer Engineering Research Group
+['Computer Engineering Research Group']
 14
-Computer Group Online Thesis Library
-Computer Group Online Thesis Library
+['Computer Group Online Thesis Library']
 16
-EECG Student Guide
-The EECG Student Guide
+['EECG Student Guide', 'The EECG Student Guide']
 actual url queue: 

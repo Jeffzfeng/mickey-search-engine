@@ -197,10 +197,10 @@ class crawler(object):
     def add_link(self, from_doc_id, to_doc_id):
         """Add a link into the database, or increase the number of links between
         two pages in the database."""
-        #TO EDIT FOR LAB 3
         new_link = (from_doc_id, to_doc_id)
         self.links.append(new_link)
-
+    
+    # need to add comments
     def _visit_title(self, elem):
         """Called when visiting the <title> tag."""
         title_text = self._text_of(elem).strip()
@@ -208,11 +208,10 @@ class crawler(object):
         if self._curr_doc_id not in self.title_dict:
             self.title_dict[self._curr_doc_id] = title_string
             url = self._doc_str_cache[self._curr_doc_id]      
-            #redis_title_key = "title: " + url
-            #server.set[redis_title_key, title_string]
             server.rpush(url, title_string)
         print "document title="+ repr(title_text)
 
+    # need to add comments 
     def _visit_description(self, elem):
         elem_string = str(elem)
         if "content" in elem_string and "description" in elem_string and self._curr_doc_id not in self.description_dict:
@@ -224,13 +223,12 @@ class crawler(object):
                 cat_elem_string = elem_string[:150]
                 cat_elem_string = cat_elem_string + '...'
                 self.description_dict[self._curr_doc_id] = cat_elem_string
-                #server.set(redis_desc_key, cat_elem_string)
                 server.rpush(url, cat_elem_string)
             else:
                 self.description_dict[self._curr_doc_id] = elem_string
-                #server.set(redis_desc_key, elem_string)
                 server.rpush(url, elem_string)
-                
+              
+    # need to add comments  
     def _visit_paragraph(self, elem):
         p_text = self._text_of(elem).strip()
         if (self._curr_doc_id not in self.description_dict):
@@ -241,11 +239,9 @@ class crawler(object):
                 cat_p_string = p_string[:150]
                 cat_p_string = cat_p_string + '...'
                 self.description_dict[self._curr_doc_id] = cat_p_string 
-                #server.set(redis_desc_key, cat_p_string)
                 server.rpush(url, cat_p_string)
             else:
                 self.description_dict[self._curr_doc_id] = p_string
-                #server.set(redis_desc_key, p_string)
                 server.rpush(url, p_string)
                 
     def _visit_a(self, elem):
@@ -310,8 +306,6 @@ class crawler(object):
         and then returns that newly inserted document's id."""
 	self._doc_str_cache[self._next_doc_id] = url
 	ret_id = self._next_doc_id
-	doc_id_key = "doc_index: " + str(ret_id)
-        #server.set(doc_id_key, url)
         self._next_doc_id += 1
         return ret_id
     
@@ -321,9 +315,6 @@ class crawler(object):
         and then returns that newly inserted word's id."""
 	self._word_str_cache[self._next_word_id] = word 
         ret_id = self._next_word_id
-        #REDIS call to add word into lexicon 
-        word_key = "lexicon: " + word
-        #server.set(word_key, ret_id)
         self._next_word_id += 1
         return ret_id  
     
@@ -334,6 +325,8 @@ class crawler(object):
             
     """iterates through the word id and set of doc ids,
     resolves them all into their cooresponding strings and puts them back"""
+    
+    #rewrite, too ugly
     def resolve_index(self):
         #iterate through keys (word_id) of 2d dictionary
 	for word_id in self._mapping_word_id_to_doc_id.iterkeys():
@@ -345,9 +338,6 @@ class crawler(object):
             self._mapping_word_str_to_doc_str[word] = set()     
             #convert doc id to urls, and throw them onto the stack
             for doc_id in mapping[word_id]:
-		        #REDIS call to add word_id into inverted index
-		        word_id_key = "inverted_index: " + str(word_id)
-		        #server.sadd(word_id_key, doc_id)      
 		        url = self._doc_str_cache[doc_id]
 		        tmp_list.append(url)
             #iterate through stack to add back onto new set    
@@ -373,6 +363,7 @@ class crawler(object):
 
     """ -- methods added for lab 3 start -- """
 
+    # function to assign a rank to pages based on their outgoing links
     def page_rank(self, num_iterations=20, initial_page_rank = 1.0):
         page_rank = defaultdict(lambda: float(initial_page_rank))
         num_outgoing_links = defaultdict(float)
@@ -402,30 +393,29 @@ class crawler(object):
             for from_id in num_outgoing_links:
                 end = 0.0
                 if len(incoming_links[from_id]):
+                    # change this function later
                     end = damping_factor * partial_page_rank(incoming_links[from_id]).sum()
                     page_rank[from_id] = lead + end
-                        
         return page_rank
 
-    def print_links(self):
-        for i,v  in self.links:
-            print i,v
-
     def ranked_inverted_index(self):
-        for word in self._word_id_cache:
-            word_id = self._word_id_cache[word]
-            doc_id_sets = self.get_inverted_index()
-            tmp_list = []
-            page_rank_dicts = self.page_rank()
+        #preload the data for future use
+        doc_id_sets = self.get_inverted_index()
+        tmp_list = []
+        page_rank_dicts = self.page_rank()
+        # for every word in the cache, a list of doc ids are assigned
+        for word, word_id in self._word_id_cache.items():
             for doc_id in doc_id_sets[word_id]:
                 pr = page_rank_dicts[doc_id]
                 new_rank_pair = doc_id, pr
+                # append to a set and sort
                 tmp_list.append(new_rank_pair)
             tmp_list.sort(reverse = True, key = lambda rank_pair: rank_pair[1])
             while(len(tmp_list)>0):
                 doc_id, pr =  tmp_list.pop(0)
                 url = self._doc_str_cache[doc_id]
                 server.rpush(word, url)
+                # cache it as a dictionary for quick access
             self.word_id_to_url_list[word] = tmp_list    
 
     """ -- methods added for lab 3 end -- """
@@ -539,8 +529,9 @@ if __name__ == "__main__":
         print title
         urls = bot._doc_str_cache[title]
         info = server.lrange(urls, 0, -1)
-        print info[0]
-        print info[1]
+        #print info[0]
+        #print info[1]
+        print info
     print "actual url queue: "
     firstWord = 'toronto'
     urlsSet = server.lrange(firstWord, 0, -1)
