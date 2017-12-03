@@ -1,6 +1,8 @@
 from bottle import route, run, request, redirect, app, error, get, static_file
 import collections, httplib2, redis
 import enchant
+import ConfigParser
+import boto.ec2
 
 pageTemplate = '''
 <!DOCTYPE html>
@@ -218,6 +220,30 @@ searchBar='''
 </form>
 '''
 
+# read in configs and find IP address to connect to based on config files
+def get_ip_address(configFile):
+	
+	configs = ConfigParser.ConfigParser()
+	# read in config file and find all neccessary parameters
+	configs.read(configFile)
+	config_region = configs.get('Connection','config_region')
+	config_aws_key_id = configs.get('Connection','config_aws_key_id')
+	config_aws_key_secret = configs.get('Connection','config_aws_key_secret')
+	config_key_name = configs.get('Key', 'config_key_name')
+	
+	#connect to account
+	new_conn = boto.ec2.connect_to_region(config_region, 
+        aws_access_key_id=config_aws_key_id,
+        aws_secret_access_key=config_aws_key_secret) 
+
+	# get all reservations that coorespond to connection
+	all_reservations = new_conn.get_all_reservations()
+	
+	# iterate and find instance that has the correct key
+	for reservation in all_reservations:
+		if reservation.instances[0].key_name == config_key_name:
+			return reservation.instances[0].ip_address.encode('utf-8')
+	
 @route('/', method='GET')
 def initial_page():
 	return  pageTemplate + mickeyPicture + "</body> </html>"
@@ -225,9 +251,10 @@ def initial_page():
 @error(404)
 
 def error404(error):
+	ip_address = get_ip_address('deployment.cfg')
 	return pageTemplate + '''This page or file does not exist. <br><br> 
-				Please visit the <a href="http://ec2-172-31-24-86.us-east-2.compute.amazonaws.com:80/">
-				Search page</a> for a new search.'''
+				Please visit the <a href="http://%s/">
+				Search page</a> for a new search.''' % ip_address
 
 @route('/&keywords=<keywords>&page_no=<pageNum>', method='GET')
 
@@ -318,8 +345,9 @@ def results_per_page(keywords, pageNum):
 	#Create the html tags to display the page numbers list at the bottom of the page
 	pageList = "Page: "
 
+	ip_address = get_ip_address('deployment.cfg')
 	for page in range(numPages):
-		pageList += '<a href= "http://172-31-24-86:80/&keywords=' + keywords + '&page_no=' + str(page+1) + '"<a>' + str(page+1) + ' '
+		pageList += '<a href= "http://%s/&keywords=' % ip_address + keywords + '&page_no=' + str(page+1) + '"<a>' + str(page+1) + ' ' 
 
 	pageList += "</tr>"
 
