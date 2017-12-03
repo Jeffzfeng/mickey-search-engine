@@ -79,8 +79,13 @@ while new_instance.state == 'pending':
 
 
 print "instance is now running! ip address is at %s!" % (new_instance.ip_address)
-os.system("scp -i %s.pem -r %s ec2-user@%s" % (new_key.name.encode('utf-8'), config_directory, new_instance.ip_address.encode('utf-8')))
-print "directory has been copied over to your new instance"
+copied = os.system("scp -i %s.pem -r %s ec2-user@%s:/" % (new_key.name.encode('utf-8'), config_directory, new_instance.ip_address.encode('utf-8')))
+if copied:
+        print "directory has been copied over to your new instance"
+else:
+   print "copy was not successful, please make sure the Frontend Directory exists"
+
+
 time.sleep(1)
 
 import paramiko
@@ -88,11 +93,6 @@ import paramiko
 key = paramiko.RSAKey.from_private_key_file(config_key_name+".pem") 
 con = paramiko.SSHClient()
 con.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-# con.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-# new_conn = boto.ec2.connect_to_region(config_region, 
-#         aws_access_key_id=config_aws_key_id,
-#         aws_secret_access_key=config_aws_key_secret) 
-# reservations = new_conn.get_all_reservations()
 connected = False
 
 while not connected:
