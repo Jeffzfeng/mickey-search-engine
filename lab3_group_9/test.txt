@@ -29,7 +29,8 @@ document title=u'Computer Engineering Group Faculty'
 HTTP Error 404: Not Found
 <urlopen error [Errno 1] _ssl.c:510: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure>
 document title=u'Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering'
-must be unicode, not str
+    num words=686
+    url=u'http://www.ece.utoronto.ca'
 document title=u'10 King&#x27;s College Rd - Toronto ON - MapQuest'
     num words=168
     url=u'http://www.mapquest.com/maps/map.adp?countryid=41&addtohistory=&country=CA&address=10+King%27s+College+Road&city=Toronto&state=ON&zipcode=M5S+3G4&submit=Get+Map'
@@ -42,5 +43,53 @@ Found
 document title=u'Computer Engineering Research Group'
     num words=215
     url=u'http://www.eecg.toronto.edu/Welcome.html'
-{96: 'Computer Engineering Group Research Facilities', 1: 'Computer Engineering Research Group', 98: 'Computer Engineering Group Graduate Students', 353: '10 King&#x27;s College Rd - Toronto ON - MapQuest', 44: 'Computer Group Online Thesis Library', 354: 'Computer Engineering Research Group', 271: 'Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering', 19: 'EECG Student Guide', 53: 'Computer Engineering Research Group', 62: 'Computer Engineering Group Major Research Areas and Projects', 245: 'Computer Engineering Group Faculty'}
-{96: 'There is easy access to computer terminals and workstations.\nThe Computer Engineering Group runs its own cluster of machines that is\ncentered around a...', 353: "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...", 98: 'All machines are connected to the University of Toronto\ncampus network. The campus network consists of 100 Mbit/s fibre-optic cables,\nand ethernet. Ma...', 100: '', 7: 'The department is divided for the purposes of graduate-level research activity\ninto eight  groups. The\nComputer Engineering Group was established arou...', 44: 'The EECG Student Guide', 354: "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...", 271: 'The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...', 349: 'ECE alumnus, founder and investor shares his concern that Canadian prosperity and innovation are on a downward trajectory  and his advice on how entre...', 275: 'Electrical &amp; Computer Engineering', 350: 'U of T Engineering system takes inspiration from plants to convert electrical energy to chemical energy at 64 per cent efficiency, the highest yet rep...', 126: '', 342: 'ECE is proud to announce the speaker line up for our  2017-2018 Distinguished Lectures Series .', 343: '&nbsp;', 344: '&nbsp;', 345: '&nbsp;', 346: '&nbsp;', 347: 'The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...', 348: 'New collaborative research project aims to replace networking infrastructure with flexible software solutions', 93: 'Matured Projects', 62: 'Human Computer Interaction \n \n Wearable Computing ( Mann )\n Computer Vision ( MacLean )\n Biomedical Cybernetics ( Wong )\n Multi-Sensor Information Sys...'}
+{1: 'Computer Engineering Research Group', 2: 'Computer Engineering Research Group', 4: 'Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering', 6: '10 King&#x27;s College Rd - Toronto ON - MapQuest', 7: '10 King&#x27;s College Rd - Toronto ON - MapQuest', 9: 'Computer Engineering Group Faculty', 10: 'Computer Engineering Group Graduate Students', 11: 'Computer Engineering Group Research Facilities', 12: 'Computer Engineering Group Major Research Areas and Projects', 13: 'Computer Engineering Research Group', 14: 'Computer Group Online Thesis Library', 16: 'EECG Student Guide'}
+{1: 'The department is divided for the purposes of graduate-level research activity\ninto eight  groups. The\nComputer Engineering Group was established arou...', 2: 'The department is divided for the purposes of graduate-level research activity\ninto eight  groups. The\nComputer Engineering Group was established arou...', 4: 'The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...', 6: "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...", 7: "View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...", 10: '', 11: 'There is easy access to computer terminals and workstations.\nThe Computer Engineering Group runs its own cluster of machines that is\ncentered around a...', 12: 'Human Computer Interaction \n \n Wearable Computing ( Mann )\n Computer Vision ( MacLean )\n Biomedical Cybernetics ( Wong )\n Multi-Sensor Information Sys...', 16: 'The EECG Student Guide'}
+1
+Computer Engineering Research Group
+The department is divided for the purposes of graduate-level research activity
+into eight  groups. The
+Computer Engineering Group was established arou...
+2
+Computer Engineering Research Group
+The department is divided for the purposes of graduate-level research activity
+into eight  groups. The
+Computer Engineering Group was established arou...
+4
+Home - Electrical &amp; Computer Engineering | Electrical &amp; Computer Engineering
+The Edward S. Rogers Sr. Department of Electrical &amp; Computer Engineering (ECE) consistently ranks among the top in North America. It attracts outs...
+6
+10 King&#x27;s College Rd - Toronto ON - MapQuest
+View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...
+7
+10 King&#x27;s College Rd - Toronto ON - MapQuest
+View detailed information and reviews for 10 King's College Rd in Toronto,  and get driving directions with road conditions and live traffic updates a...
+9
+Computer Engineering Group Faculty
+Computer Engineering Group Faculty
+10
+Computer Engineering Group Graduate Students
+
+11
+Computer Engineering Group Research Facilities
+There is easy access to computer terminals and workstations.
+The Computer Engineering Group runs its own cluster of machines that is
+centered around a...
+12
+Computer Engineering Group Major Research Areas and Projects
+Human Computer Interaction 
+ 
+ Wearable Computing ( Mann )
+ Computer Vision ( MacLean )
+ Biomedical Cybernetics ( Wong )
+ Multi-Sensor Information Sys...
+13
+Computer Engineering Research Group
+Computer Engineering Research Group
+14
+Computer Group Online Thesis Library
+Computer Group Online Thesis Library
+16
+EECG Student Guide
+The EECG Student Guide
+actual url queue: 
