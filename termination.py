@@ -48,39 +48,19 @@ print "instance successfully terminated!"
 all_keys = new_conn.get_all_key_pairs()
 
 for key in all_keys:
-    if(key.name.encode('utf-8')!='new_key_name'):
-        try: 
-            new_conn.delete_key_pair(key.name.encode('utf-8'))
-            print "key succesfully deleted from connection!"
-        except:
-            print "could not delete key, might need to manually remove key %s from connection" % config_key_name
+     if(key.name.encode('utf-8') == config_key_name ):
+         try: 
+             new_conn.delete_key_pair(key.name.encode('utf-8'))
+             print "key succesfully deleted from connection!"
+         except:
+             print "could not delete key, might need to manually remove key %s from connection" % config_key_name
 
 all_groups = new_conn.get_all_security_groups()
 
 for group in all_groups:
-    if(group.name.encode('utf-8')!='csc326-group9'):
-        try:
-            new_conn.delete_security_group(group.name.encode('utf-8')) 
-            print "security group successfully deleted from connection!"
-        except:
-            print "could not delete security group, might need to manually remove private group %s from connection" % config_security_group_name
-
-# all_keys = new_conn.get_all_key_pairs()
-
-# for key in all_keys:
-#     if(key.name.encode('utf-8') == config_key_name ):
-#         try: 
-#             new_conn.delete_key_pair(key.name.encode('utf-8'))
-#             print "key succesfully deleted from connection!"
-#         except:
-#             print "could not delete key, might need to manually remove key %s from connection" % config_key_name
-
-# all_groups = new_conn.get_all_security_groups()
-
-# for group in all_groups:
-#     if(group.name.encode('utf-8') == config_security_group_name):
-#         try:
-#             new_conn.delete_security_group(group.name.encode('utf-8')) 
-#             print "security group successfully deleted from connection!"
-#         except:
-#             print "could not delete security group, might need to manually remove private group %s from connection" % config_security_group_name
+     if(group.name.encode('utf-8') == config_security_group_name):
+         try:
+             new_conn.delete_security_group(group.name.encode('utf-8')) 
+             print "security group successfully deleted from connection!"
+         except:
+             print "could not delete security group, might need to manually remove private group %s from connection" % config_security_group_name

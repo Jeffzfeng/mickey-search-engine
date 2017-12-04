@@ -119,5 +119,5 @@ os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/." % (co
 os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/." % (config_key_name, 'search_database.pickle', new_instance.ip_address.encode('utf-8')))
 print "IP address available at %s, have fun!" % new_instance.ip_address.encode('utf-8')
 time.sleep(2)
-os.system("ssh -o StrictHostKeyChecking=no -i %s.pem ec2-user@%s nohup sudo python lab4_frontend/lab4frontend.py" % (config_key_name, new_instance.ip_address.encode('utf-8')))
+os.system("ssh -o StrictHostKeyChecking=no -i %s.pem ec2-user@%s nohup sudo python lab4_frontend/lab4frontend.py &" % (config_key_name, new_instance.ip_address.encode('utf-8')))
 con.close()
