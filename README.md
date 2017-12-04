@@ -2,23 +2,24 @@
 
 This README document steps neccessary to run the Mickey Mickey Go Search Engine. 
 
-### How do I get set up? ###
-###To Run
-1. `cd csc326-mikeymikeygo`
-1. ASK JEFFFFFF
+### How do I get set up?
+ - All setup will be done in the deployment.cfg file, follow the example config set for further information 
 
 ###To Change credentials
 1. `cd csc326-mikeymikeygo`
-1. `vim deployment.cfg`
+2. `vim deployment.cfg`
 
 ###To Deploy
 1. `cd csc326-mikeymikeygo`
-1. run `python deployment.py`
-1. go to `http://<ip_address>/`
+2. `python deployment.py`
+
+###To Run
+1. once deployed, go to 'ip address'
 
 ###To Terminate 
 1. `cd csc326-mikeymikeygo`
-1. run `python termination.py`
+2. run `python termination.py`
 
 ###To Crawl:
 1. run `python crawler.py`
+2. output of crawled results will be in the pickle file, 'search_database.pickle'
