@@ -133,7 +133,7 @@ pageTemplate = '''
 			margin: 0;
 			position: absolute;
 			top: 20%;
-			left: 20%;
+			left: 20%;13.58.131.252
 			margin-right: -80%;
 			transform: translate(-50%, -50%)
 		}
@@ -297,9 +297,10 @@ def results_per_page(keywords, pageNum):
 		else:
 			if englishD.check(word) == False:
 				#words that are misspelt but still bring up search results are not considered as misspelt words
-				urlspellcheck = url_list[word]
-				if len(urlspellcheck) == 0:
-					incorrectWords.append(word);
+                                if word not in url_list:
+                                    incorrectWords.append(word);
+                                else:
+                                    pass
 	
 	#If there are misspelt words, create html to be able to display it later
 	if len(incorrectWords)>0: 
@@ -320,10 +321,10 @@ def results_per_page(keywords, pageNum):
 	urlsSet=list()
 	no_results_found = ' '
 	for m in range(len(listofwords)):
-		if not listofwords[m]:
+                currword = listofwords[m]
+		if currword not in url_list:
 			pass
 		else:
-			currword = listofwords[m]
 			urlsSet += url_list[currword]
 	
 	numLinks = len(urlsSet)	
@@ -370,38 +371,16 @@ def results_per_page(keywords, pageNum):
 	urldescrip = ''
 	urlsSet = urlsSet[lowerRangeofData:higherRangeofData]
 	
-	# #Loop through the urlsSet and obtain the title, description for every url
-	# for i in range(len(urlsSet)):
-	# 	url = urlsSet[i]
-	# 	#urlinfo = redisServer.lrange(url, 0, -1);
-	# 	urlinfo = url_list
-	# 	urlinfo 
-	# 	lengthurllist=len(urlinfo)
-		
-	# 	#perform error checking to make sure the title of the url exists before obtaining it
-	# 	if lengthurllist == 1:
-	# 		if urlinfo[0]==None:
-	# 			pass;
-	# 		else:
-	# 			urltitle = urlinfo[0]
-	
-	# 	#perform error checking to make sure the description of the url exists before obtaining it
-	# 	elif lengthurllist <= 2 :
-	# 		if urlinfo[0]==None or urlinfo[1]==None:
-	# 			pass;
-	# 		else:
-	# 			urltitle = urlinfo[0]
-	# 			urldescrip = urlinfo[1]
 	
 	for i in range(len(urlsSet)):
 		url = urlsSet[i]
 		
-		if url_titles[url] == None:
+		if url not in url_titles:
 			pass;
 		else:
 			urltitle = url_titles[url]
 			
-		if url_desc[url] == None:
+		if url not in url_desc:
 			pass;
 		else:
 			urldescrip = url_desc[url]

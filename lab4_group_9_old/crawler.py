@@ -75,8 +75,8 @@ class crawler(object):
         # new list to hold list of links (from, to)
         self.links = []
         
-        #new list to hold list of word_id to url with page rank
-        self.word_id_to_url_list = { }
+        #new list to hold list of word to url with page rank
+        self.word_to_url_list = { }
         
         """ -- Objects added for lab 3 end -- """
         
@@ -88,7 +88,7 @@ class crawler(object):
 
         self.p_dict = { }
 
-        """ -- Objects added for lab 4 end -- """ 
+        """ -- Objects added for lab 4 end -- """
 
         # functions to call when entering and exiting specific tags
         self._enter = defaultdict(lambda *a, **ka: self._visit_ignore)
@@ -207,45 +207,47 @@ class crawler(object):
         """Called when visiting the <title> tag."""
         title_text = self._text_of(elem).strip()
         title_string = unicodedata.normalize('NFKD', title_text).encode('ascii', 'ignore')
-        if self._curr_doc_id not in self.title_dict:
-            self.title_dict[self._curr_doc_id] = title_string
-            url = self._doc_str_cache[self._curr_doc_id]      
-            server.rpush(url, title_string)
+        url = self._doc_str_cache[self._curr_doc_id]              
+        if url not in self.title_dict:
+            #server.rpush(url, title_string)
+            self.title_dict[url] = title_string            
         print "document title="+ repr(title_text)
 
     # need to add comments 
     def _visit_description(self, elem):
         elem_string = str(elem)
-        if "content" in elem_string and "description" in elem_string and self._curr_doc_id not in self.description_dict:
+        url = self._doc_str_cache[self._curr_doc_id]              
+        if "content" in elem_string and "description" in elem_string and url not in self.description_dict:
             elem_string = re.search('(?<=content=").*', elem_string)
             elem_string = re.sub('".*', "", elem_string.group(0))
-            url = self._doc_str_cache[self._curr_doc_id]      
             #redis_desc_key = "desc: " + url
             if len(elem_string) > 150:
                 cat_elem_string = elem_string[:150]
                 cat_elem_string = cat_elem_string + '...'
-                self.description_dict[self._curr_doc_id] = cat_elem_string
-                server.rpush(url, cat_elem_string)
+                self.description_dict[url] = cat_elem_string
+                #server.rpush(url, cat_elem_string)
             else:
-                self.description_dict[self._curr_doc_id] = elem_string
-                server.rpush(url, elem_string)
+                self.description_dict[url] = elem_string
+                #server.rpush(url, elem_string)
+                pass
               
     # need to add comments  
     def _visit_paragraph(self, elem):
+        url = self._doc_str_cache[self._curr_doc_id]              
         p_text = self._text_of(elem).strip()
-        if (self._curr_doc_id not in self.description_dict):
+        if url not in self.description_dict:
             p_string = unicodedata.normalize('NFKD', p_text).encode('ascii', 'ignore')
-            url = self._doc_str_cache[self._curr_doc_id]      
             #redis_desc_key = "desc: " + url
             if len(p_string) > 150:
                 cat_p_string = p_string[:150]
                 cat_p_string = cat_p_string + '...'
-                self.description_dict[self._curr_doc_id] = cat_p_string 
-                server.rpush(url, cat_p_string)
+                self.description_dict[url] = cat_p_string 
+                #server.rpush(url, cat_p_string)
             else:
-                self.description_dict[self._curr_doc_id] = p_string
-                server.rpush(url, p_string)
-                
+                self.description_dict[url] = p_string
+                #server.rpush(url, p_string)
+                pass
+            
     def _visit_a(self, elem):
         """Called when visiting <a> tags."""
         dest_url = self._fix_url(self._curr_url, attr(elem,"href"))
@@ -328,7 +330,6 @@ class crawler(object):
     """iterates through the word id and set of doc ids,
     resolves them all into their cooresponding strings and puts them back"""
     
-    #rewrite, too ugly
     def resolve_index(self):
         #iterate through keys (word_id) of 2d dictionary
 	for word_id in self._mapping_word_id_to_doc_id.iterkeys():
@@ -413,12 +414,13 @@ class crawler(object):
                 # append to a set and sort
                 tmp_list.append(new_rank_pair)
             tmp_list.sort(reverse = True, key = lambda rank_pair: rank_pair[1])
+            self.word_to_url_list[word] = list()               
             while(len(tmp_list)>0):
                 doc_id, pr =  tmp_list.pop(0)
                 url = self._doc_str_cache[doc_id]
-                server.rpush(word, url)
+                self.word_to_url_list[word].append(url)
+                #server.rpush(word, url)
                 # cache it as a dictionary for quick access
-            self.word_id_to_url_list[word] = tmp_list    
 
     """ -- methods added for lab 3 end -- """
  
@@ -527,24 +529,24 @@ if __name__ == "__main__":
     bot.ranked_inverted_index()
     print bot.title_dict
     print bot.description_dict
-    for title in bot.title_dict.keys():
-        print title
-        urls = bot._doc_str_cache[title]
-        info = server.lrange(urls, 0, -1)
+    #for title in bot.title_dict.keys():
+        #print title
+        #urls = bot._doc_str_cache[title]
+        #info = server.lrange(urls, 0, -1)
         #print info[0]
         #print info[1]
-        print info
-    print "actual url queue: "
-    firstWord = 'toronto'
-    urlsSet = server.lrange(firstWord, 0, -1)
+        #print info
+    #print "actual url queue: "
+    #firstWord = 'toronto'
+    #urlsSet = server.lrange(firstWord, 0, -1)
     with open('search_database.pickle', 'wb') as handle:
-        url_list = bot.word_id_to_url_list
+        url_list = bot.word_to_url_list
         pickle.dump(url_list, handle)
         
         url_titles = bot.title_dict
         pickle.dump(url_titles, handle)
         
-        url_desc = bot.word_id_to_url_list
+        url_desc = bot.description_dict
         pickle.dump(url_desc, handle)
         
     # for url in urlsSet:

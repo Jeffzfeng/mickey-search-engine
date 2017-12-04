@@ -102,13 +102,12 @@ while not connected:
                 print "connection not yet ready - please wait a moment"
                 time.sleep(2)
 
-commands = ["cd lab4_group_9", "sudo yum install -y numpy", "sudo pip install bottle", "sudo pip install redis", "sudo yum install -y python-enchant", "sudo pip install pyenchant", "sudo yum install -y aspell-en enchant-aspell", "sudo pip install ConfigParser", "sudo easy_install -U boto"]
+commands = ["sudo yum install -y numpy", "sudo pip install bottle", "sudo pip install redis", "sudo yum install -y python-enchant", "sudo pip install pyenchant", "sudo yum install -y aspell-en enchant-aspell", "sudo pip install ConfigParser", "sudo easy_install -U boto"]
 
 for command in commands:
     try:        
         print "Executing {}".format(command)
         stdin , stdout, stderr = con.exec_command(command) # this command is executed on the *remote* server
-        #> /dev/null 2>&1 &
         print stdout.read()
         
     except:
@@ -117,7 +116,10 @@ for command in commands:
         
 os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/" % (config_key_name, config_directory, new_instance.ip_address.encode('utf-8')))
 os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/lab4_group_9/." % (config_key_name, 'deployment.cfg', new_instance.ip_address.encode('utf-8')))
-os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/lab4_group_9/." % (config_key_name, 'search_database.pickle', new_instance.ip_address.encode('utf-8')))
+os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/." % (config_key_name, 'deployment.cfg', new_instance.ip_address.encode('utf-8')))
+os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/." % (config_key_name, 'search_database.pickle', new_instance.ip_address.encode('utf-8')))
+#os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/lab4_group_9/." % (config_key_name, 'search_database.pickle', new_instance.ip_address.encode('utf-8')))
 print "IP address available at %s, have fun!" % new_instance.ip_address.encode('utf-8')
+time.sleep(2)
 os.system("ssh -o StrictHostKeyChecking=no -i %s.pem ec2-user@%s nohup sudo python lab4_group_9/lab4frontend.py" % (config_key_name, new_instance.ip_address.encode('utf-8')))
 con.close()
