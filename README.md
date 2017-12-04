@@ -1,27 +1,24 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* lab3 - CSC326
+This README document steps neccessary to run the Mickey Mickey Go Search Engine. 
 
 ### How do I get set up? ###
+###To Run
+1. `cd csc326-mikeymikeygo`
+1. ASK JEFFFFFF
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+###To Change credentials
+1. `cd csc326-mikeymikeygo`
+1. `vim deployment.cfg`
 
-### Contribution guidelines ###
+###To Deploy
+1. `cd csc326-mikeymikeygo`
+1. run `python deployment.py`
+1. go to `http://<ip_address>/`
 
-* Writing tests
-* Code review
-* Other guidelines
+###To Terminate 
+1. `cd csc326-mikeymikeygo`
+1. run `python termination.py`
 
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+###To Crawl:
+1. run `python crawler.py`
