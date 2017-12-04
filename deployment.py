@@ -67,9 +67,17 @@ if config_ICMP:
         print "ICMP connections allowed on port -1"
 time.sleep(1)
 
+
 #kick off instance into reservation queue
 new_reservation = new_conn.run_instances(config_image, key_name=new_key.name, instance_type=config_instance_type, security_groups=[new_group.name])
+while new_reservation == None:
+        try:
+                new_reservation = new_conn.run_instances(config_image, key_name=new_key.name, instance_type=config_instance_type, security_groups=[new_group.name])
+        except:
+                print "reservation not properly created.. trying again"
+
 new_instance = new_reservation.instances[0]
+
 #instance completed
 while new_instance.state == 'pending':
         current_state = new_instance.state
@@ -80,16 +88,6 @@ while new_instance.state == 'pending':
 
 print "instance is now running! ip address is at %s!" % (new_instance.ip_address)
 
-# copied = False
-
-# while copied == False:
-#         try:
-#                 os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/" % (config_key_name, config_directory, new_instance.ip_address.encode('utf-8')))
-#                 copied = True
-#         except:
-#                 print "port not yet ready for copying...."
-                
-# paramiko setup 
 key = paramiko.RSAKey.from_private_key_file(config_key_name+".pem") 
 con = paramiko.SSHClient()
 con.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -104,7 +102,7 @@ while not connected:
                 print "connection not yet ready - please wait a moment"
                 time.sleep(2)
 
-commands = ["cd lab4_group_9", "sudo yum install -y numpy", "sudo pip install bottle", "sudo pip install redis", "sudo yum install -y python-enchant", "sudo pip install pyenchant", "sudo yum install -y aspell-en enchant-aspell", "sudo pip install ConfigParser", "sudo pip install boto"]
+commands = ["cd lab4_group_9", "sudo yum install -y numpy", "sudo pip install bottle", "sudo pip install redis", "sudo yum install -y python-enchant", "sudo pip install pyenchant", "sudo yum install -y aspell-en enchant-aspell", "sudo pip install ConfigParser", "sudo easy_install -U boto"]
 
 for command in commands:
     try:        
@@ -116,10 +114,10 @@ for command in commands:
     except:
         print( "Errors")
         print stderr.read()
-
+        
 os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/" % (config_key_name, config_directory, new_instance.ip_address.encode('utf-8')))
 os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/lab4_group_9/." % (config_key_name, 'deployment.cfg', new_instance.ip_address.encode('utf-8')))
+os.system("scp -oStrictHostKeyChecking=no -i %s.pem -r %s ec2-user@%s:~/lab4_group_9/." % (config_key_name, 'search_database.pickle', new_instance.ip_address.encode('utf-8')))
 print "IP address available at %s, have fun!" % new_instance.ip_address.encode('utf-8')
 os.system("ssh -o StrictHostKeyChecking=no -i %s.pem ec2-user@%s nohup sudo python lab4_group_9/lab4frontend.py" % (config_key_name, new_instance.ip_address.encode('utf-8')))
 con.close()
-#new_conn.terminate_instances(instance_ids=[reservations[0].instances[0].id])

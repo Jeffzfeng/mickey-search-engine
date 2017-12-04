@@ -29,6 +29,8 @@ import re
 from collections import defaultdict
 import numpy as np
 import redis
+import pickle
+
 server = redis.Redis('52.14.224.74')
 
 def attr(elem, attr):
@@ -86,7 +88,7 @@ class crawler(object):
 
         self.p_dict = { }
 
-        """ -- Objects added for lab 4 end -- """
+        """ -- Objects added for lab 4 end -- """ 
 
         # functions to call when entering and exiting specific tags
         self._enter = defaultdict(lambda *a, **ka: self._visit_ignore)
@@ -535,6 +537,16 @@ if __name__ == "__main__":
     print "actual url queue: "
     firstWord = 'toronto'
     urlsSet = server.lrange(firstWord, 0, -1)
+    with open('search_database.pickle', 'wb') as handle:
+        url_list = bot.word_id_to_url_list
+        pickle.dump(url_list, handle)
+        
+        url_titles = bot.title_dict
+        pickle.dump(url_titles, handle)
+        
+        url_desc = bot.word_id_to_url_list
+        pickle.dump(url_desc, handle)
+        
     # for url in urlsSet:
     #     print bot._doc_id_cache[url]
     #bot.print_links()

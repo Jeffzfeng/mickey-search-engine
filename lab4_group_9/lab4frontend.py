@@ -3,6 +3,7 @@ import collections, httplib2, redis
 import enchant
 import ConfigParser
 import boto.ec2
+import pickle
 
 pageTemplate = '''
 <!DOCTYPE html>
@@ -221,11 +222,11 @@ searchBar='''
 '''
 
 # read in configs and find IP address to connect to based on config files
-def get_ip_address(configFile):
+def get_ip_address():
 	
 	configs = ConfigParser.ConfigParser()
 	# read in config file and find all neccessary parameters
-	configs.read(configFile)
+	configs.read('deployment.cfg')
 	config_region = configs.get('Connection','config_region')
 	config_aws_key_id = configs.get('Connection','config_aws_key_id')
 	config_aws_key_secret = configs.get('Connection','config_aws_key_secret')
@@ -233,9 +234,9 @@ def get_ip_address(configFile):
 	
 	#connect to account
 	new_conn = boto.ec2.connect_to_region(config_region, 
-        aws_access_key_id=config_aws_key_id,
-        aws_secret_access_key=config_aws_key_secret) 
-
+	    aws_access_key_id=config_aws_key_id,
+	    aws_secret_access_key=config_aws_key_secret) 
+	
 	# get all reservations that coorespond to connection
 	all_reservations = new_conn.get_all_reservations()
 	
@@ -251,7 +252,7 @@ def initial_page():
 @error(404)
 
 def error404(error):
-	ip_address = get_ip_address('deployment.cfg')
+	ip_address = get_ip_address()
 	return pageTemplate + '''This page or file does not exist. <br><br> 
 				Please visit the <a href="http://%s/">
 				Search page</a> for a new search.''' % ip_address
@@ -262,6 +263,12 @@ def error404(error):
 #function if the number of urls require more than one page to display. 
 
 def results_per_page(keywords, pageNum):
+	
+	#get pickle files
+	with open('search_database.pickle', 'rb') as handle:
+		url_list = pickle.load(handle)
+		url_titles = pickle.load(handle)
+		url_desc = pickle.load(handle)
 
 	searchResultsTitle = '''<p class=searchresultstitlestyle> Search Results For: %s</p> '''%(keywords)
 	listofwords=keywords.split(' ')
@@ -290,7 +297,7 @@ def results_per_page(keywords, pageNum):
 		else:
 			if englishD.check(word) == False:
 				#words that are misspelt but still bring up search results are not considered as misspelt words
-				urlspellcheck = redisServer.lrange(word, 0, -1)
+				urlspellcheck = url_list[word]
 				if len(urlspellcheck) == 0:
 					incorrectWords.append(word);
 	
@@ -317,7 +324,7 @@ def results_per_page(keywords, pageNum):
 			pass
 		else:
 			currword = listofwords[m]
-			urlsSet += redisServer.lrange(currword, 0, -1)
+			urlsSet += url_list[currword]
 	
 	numLinks = len(urlsSet)	
 	print numLinks
@@ -344,8 +351,7 @@ def results_per_page(keywords, pageNum):
 
 	#Create the html tags to display the page numbers list at the bottom of the page
 	pageList = "Page: "
-
-	ip_address = get_ip_address('deployment.cfg')
+	ip_address = get_ip_address()
 	for page in range(numPages):
 		pageList += '<a href= "http://%s/&keywords=' % ip_address + keywords + '&page_no=' + str(page+1) + '"<a>' + str(page+1) + ' ' 
 
@@ -363,28 +369,44 @@ def results_per_page(keywords, pageNum):
 	urltitle = ''
 	urldescrip = ''
 	urlsSet = urlsSet[lowerRangeofData:higherRangeofData]
-
-	#Loop through the urlsSet and obtain the title, description for every url
+	
+	# #Loop through the urlsSet and obtain the title, description for every url
+	# for i in range(len(urlsSet)):
+	# 	url = urlsSet[i]
+	# 	#urlinfo = redisServer.lrange(url, 0, -1);
+	# 	urlinfo = url_list
+	# 	urlinfo 
+	# 	lengthurllist=len(urlinfo)
+		
+	# 	#perform error checking to make sure the title of the url exists before obtaining it
+	# 	if lengthurllist == 1:
+	# 		if urlinfo[0]==None:
+	# 			pass;
+	# 		else:
+	# 			urltitle = urlinfo[0]
+	
+	# 	#perform error checking to make sure the description of the url exists before obtaining it
+	# 	elif lengthurllist <= 2 :
+	# 		if urlinfo[0]==None or urlinfo[1]==None:
+	# 			pass;
+	# 		else:
+	# 			urltitle = urlinfo[0]
+	# 			urldescrip = urlinfo[1]
+	
 	for i in range(len(urlsSet)):
 		url = urlsSet[i]
-		urlinfo = redisServer.lrange(url, 0, -1);
-		lengthurllist=len(urlinfo)
 		
-		#perform error checking to make sure the title of the url exists before obtaining it
-		if lengthurllist == 1:
-			if urlinfo[0]==None:
-				pass;
-			else:
-				urltitle = urlinfo[0]
+		if url_titles[url] == None:
+			pass;
+		else:
+			urltitle = url_titles[url]
+			
+		if url_desc[url] == None:
+			pass;
+		else:
+			urldescrip = url_desc[url]
+		
 	
-		#perform error checking to make sure the description of the url exists before obtaining it
-		elif lengthurllist <= 2 :
-			if urlinfo[0]==None or urlinfo[1]==None:
-				pass;
-			else:
-				urltitle = urlinfo[0]
-				urldescrip = urlinfo[1]
-
 		#Create the html tags to display the url, title, description
 		urlString = str(url)
 		displayLinks += '''<div class=resultsouter><p class=resultsstyle>

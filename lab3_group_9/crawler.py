@@ -29,6 +29,8 @@ import re
 from collections import defaultdict
 import numpy as np
 import redis
+import pickle
+
 server = redis.Redis('52.14.224.74')
 
 def attr(elem, attr):
@@ -205,44 +207,49 @@ class crawler(object):
         """Called when visiting the <title> tag."""
         title_text = self._text_of(elem).strip()
         title_string = unicodedata.normalize('NFKD', title_text).encode('ascii', 'ignore')
-        if self._curr_doc_id not in self.title_dict:
+        url = self._doc_str_cache[self._curr_doc_id]      
+        if url not in self.title_dict:
             self.title_dict[self._curr_doc_id] = title_string
-            url = self._doc_str_cache[self._curr_doc_id]      
             server.rpush(url, title_string)
+            self.title_dict[url] = title_string
         print "document title="+ repr(title_text)
 
     # need to add comments 
     def _visit_description(self, elem):
         elem_string = str(elem)
-        if "content" in elem_string and "description" in elem_string and self._curr_doc_id not in self.description_dict:
+        url = self._doc_str_cache[self._curr_doc_id]      
+        if "content" in elem_string and "description" in elem_string and url not in self.description_dict:
             elem_string = re.search('(?<=content=").*', elem_string)
             elem_string = re.sub('".*', "", elem_string.group(0))
-            url = self._doc_str_cache[self._curr_doc_id]      
             #redis_desc_key = "desc: " + url
             if len(elem_string) > 150:
                 cat_elem_string = elem_string[:150]
                 cat_elem_string = cat_elem_string + '...'
                 self.description_dict[self._curr_doc_id] = cat_elem_string
                 server.rpush(url, cat_elem_string)
+                self.description_dict[url] = cat_elem_strong
             else:
                 self.description_dict[self._curr_doc_id] = elem_string
                 server.rpush(url, elem_string)
+                self.description_dict[url] = elem_strong
               
     # need to add comments  
     def _visit_paragraph(self, elem):
         p_text = self._text_of(elem).strip()
-        if (self._curr_doc_id not in self.description_dict):
+        url = self._doc_str_cache[self._curr_doc_id]      
+        if (url not in self.description_dict):
             p_string = unicodedata.normalize('NFKD', p_text).encode('ascii', 'ignore')
-            url = self._doc_str_cache[self._curr_doc_id]      
             #redis_desc_key = "desc: " + url
             if len(p_string) > 150:
                 cat_p_string = p_string[:150]
                 cat_p_string = cat_p_string + '...'
                 self.description_dict[self._curr_doc_id] = cat_p_string 
                 server.rpush(url, cat_p_string)
+                self.description_dict[url] = cat_p_strong
             else:
                 self.description_dict[self._curr_doc_id] = p_string
                 server.rpush(url, p_string)
+                self.description_dict[url] = p_strong
                 
     def _visit_a(self, elem):
         """Called when visiting <a> tags."""
@@ -460,7 +467,7 @@ class crawler(object):
 
                 # ignore this tag and everything in it
                 if tag_name in self._ignored_tags:
-                    if tag.nextSibling:
+                    if tag.nextSibling:csc326
                         tag = NextTag(tag.nextSibling)
                     else:
                         self._exit[stack[-1].name.lower()](stack[-1])
@@ -535,9 +542,10 @@ if __name__ == "__main__":
     print "actual url queue: "
     firstWord = 'toronto'
     urlsSet = server.lrange(firstWord, 0, -1)
+
     # for url in urlsSet:
     #     print bot._doc_id_cache[url]
-    #bot.print_links()
+    #bot.print_links()csc326
     #links = [(1,2), (1,3), (3,4), (1,4), (2,3), (4,3)]
     #ranks = bot.page_rank()
     #for doc_id in ranks:
